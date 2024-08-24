@@ -1,9 +1,11 @@
 "use client";
 
-import { Environment, Gltf, CameraControls } from "@react-three/drei"
+import { CameraControls, Environment, Gltf,  } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
-import {Teacher} from './Teacher'
-import {degToRad} from "three/src/math/MathUtils";
+import { degToRad } from "three/src/math/MathUtils";
+import { Teacher } from './Teacher'
+import KeyboardCameraControls from './KeyboardCameraControls'
+
 
 export const Experience = () =>{
 return(
@@ -11,8 +13,9 @@ return(
   <Canvas camera={{
     position:[0, 0 , .0001]
   }}>
-    <CameraManager/>
+    {/* <CameraManager/> */}
     <Environment preset='sunset'/>
+    <KeyboardCameraControls/>
     <ambientLight intensity={.8} />
     <Teacher teacher={'Nanami'} position={[-1,-1.7,-3]} scale={1.5} rotation-y={degToRad(20)}/>
     <Gltf src="/models/classroom_default.glb" position={[0.2, -1.7, -2]}/>
