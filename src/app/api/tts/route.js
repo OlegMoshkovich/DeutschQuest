@@ -2,9 +2,6 @@ import * as sdk from "microsoft-cognitiveservices-speech-sdk";
 import { PassThrough } from "stream";
 
 export async function GET(req) {
-  // WARNING: Do not expose your keys
-  // WARNING: If you host publicly your project, add an authentication layer to limit the consumption of Azure resources
-
   const speechConfig = sdk.SpeechConfig.fromSubscription(
     process.env["SPEECH_KEY"],
     process.env["SPEECH_REGION"]
@@ -16,6 +13,7 @@ export async function GET(req) {
 
   const speechSynthesizer = new sdk.SpeechSynthesizer(speechConfig);
   const visemes = [];
+
   speechSynthesizer.visemeReceived = function (s, e) {
     // console.log(
     //   "(Viseme), Audio offset: " +
@@ -25,13 +23,13 @@ export async function GET(req) {
     // );
     visemes.push([e.audioOffset / 10000, e.visemeId]);
   };
+
   const audioStream = await new Promise((resolve, reject) => {
     speechSynthesizer.speakTextAsync(
-      req.nextUrl.searchParams.get("text") ||
-        "I'm excited to try text to speech",
+      req.nextUrl.searchParams.get("text") || "I'm excited to try text to speech",
+
       (result) => {
         const { audioData } = result;
-
         speechSynthesizer.close();
 
         // convert arrayBuffer to stream
@@ -39,6 +37,7 @@ export async function GET(req) {
         bufferStream.end(Buffer.from(audioData));
         resolve(bufferStream);
       },
+
       (error) => {
         console.log(error);
         speechSynthesizer.close();
